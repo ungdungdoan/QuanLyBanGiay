@@ -11,14 +11,22 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import AppQLgiay.BanGiay;
+import AppQLgiay.BanGiayDAO;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class appQLgiay extends JFrame {
+public class appQLgiay extends JFrame  {
 
 	private JPanel contentPane;
-
+	private DefaultTableModel model;
 	/**
 	 * Launch the application.
 	 */
@@ -33,6 +41,7 @@ public class appQLgiay extends JFrame {
 				}
 			}
 		});
+		
 	}
 	/**
 	 * Create the panel.
@@ -45,12 +54,17 @@ public class appQLgiay extends JFrame {
 	private JTextField textField_4;
 	private JTextField textField_5;
 	private JTable table;
-	private JTextField textField_6;
+	private JScrollPane scrollPane;
+	private JButton btnXoa;
+	private JButton btnSua;
 
 	/**
 	 * Create the panel.
 	 */
 	public appQLgiay() {
+		setSize(600, 600);
+		
+		
 		setBackground(new Color(255, 255, 255));
 		setForeground(Color.BLUE);
 		getContentPane().setLayout(null);
@@ -129,56 +143,156 @@ public class appQLgiay extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
-		panel.setBounds(24, 209, 549, 157);
+		panel.setBounds(24, 210, 549, 139);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
+		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(55, 25, 452, 110);
+		scrollPane.setBounds(0, 0, 549, 137);
 		panel.add(scrollPane);
 		
 		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		table.setModel(model = new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null},
+	
 			},
 			new String[] {
-				"LOAI", "MA", "MAU SAC", "SIZE", "SO LUONG", "DON GIA"
+				"LOAI", "MA", "MAU SAC", "SIZE", "SO LUONG", "GIA"
 			}
-		));
+			
+		));		   
 		scrollPane.setViewportView(table);
+
+		
+		
 		
 		JButton btnThem = new JButton("THEM");
+		btnThem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				themGiay();
+			}
+		});
 		btnThem.setForeground(Color.BLUE);
 	
 		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnThem.setBounds(24, 395, 81, 36);
+		btnThem.setBounds(144, 395, 81, 36);
 		getContentPane().add(btnThem);
 		
-		JButton btnSua = new JButton("SUA");
+		JButton btnSua = new JButton("CAP NHAT");
+		btnSua.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				capnhatGiay();
+				
+			}
+		});
 		btnSua.setForeground(Color.BLUE);
 		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSua.setBounds(115, 395, 72, 36);
+		btnSua.setBounds(253, 395, 110, 36);
 		getContentPane().add(btnSua);
-		
-		JButton btnNewButton = new JButton("XOA");
-		btnNewButton.setForeground(Color.BLUE);
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton.setBounds(197, 396, 72, 34);
-		getContentPane().add(btnNewButton);
-		
-		textField_6 = new JTextField();
-		textField_6.setBounds(397, 395, 176, 36);
-		getContentPane().add(textField_6);
-		textField_6.setColumns(10);
-		
-		JLabel lblTimKiem = new JLabel("TIM KIEM");
-		lblTimKiem.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblTimKiem.setForeground(Color.BLUE);
-		lblTimKiem.setBounds(303, 395, 84, 36);
-		getContentPane().add(lblTimKiem);
 
+		 btnXoa = new JButton("XOA");
+		btnXoa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				xoaGiay();
+			}
+			
+		});
+		//btnXoa.addActionListener(this);
+		btnXoa.setForeground(Color.BLUE);
+		btnXoa.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnXoa.setBounds(383, 396, 72, 36);
+		getContentPane().add(btnXoa);
+		   init();
+      
+		   
 	}
 
+	protected void themGiay() {
+		// TODO Auto-generated method stub
+		BanGiay lop = new BanGiay();
+		lop.setLoai(textField.getText());
+		lop.setMa(textField_1.getText());
+		lop.setMau(textField_2.getText());
+		lop.setSize(textField_3.getText());
+		lop.setSoluong(textField_4.getText());
+		lop.setGia(textField_5.getText());
+		BanGiayDAO.insertlop(lop);
+		Object [] row = {lop.getLoai(),lop.getMa(),lop.getMau(),lop.getSize(),lop.getSoluong(),lop.getGia()};
+	    model.addRow(row);
 
+	
+	}
+	
+	private void xoaRongTextfields() {
+		textField.setText("");
+		textField_1.setText("");
+		textField_2.setText("");
+		textField_3.setText("");
+		textField_4.setText("");
+		textField_5.setText("");
+		textField_1.requestFocus();
+	}
+
+	protected void xoaGiay() {
+		// TODO Auto-generated method stub
+		BanGiay lop = new BanGiay();
+		int row = table.getSelectedRow();
+		lop.setLoai(textField.getText());
+		lop.setMa(textField_1.getText());
+		lop.setMau(textField_2.getText());
+		lop.setSize(textField_3.getText());
+		lop.setSoluong(textField_4.getText());
+		lop.setGia(textField_5.getText());
+//		BanGiay lop = new BanGiay(textField.getText(),
+//								  textField_1.getText(),
+//								  textField_2.getText(),
+//								  textField_3.getText(),
+//								  textField_4.getText(),
+//								  textField_5.getText());
+		
+		BanGiayDAO.delete(lop);
+		
+		
+		
+		model.removeRow(row);
+		xoaRongTextfields();	
+	}
+
+	protected void capnhatGiay() {
+		
+		//int row = table.getSelectedRow();
+		//JOptionPane.showMessageDialog(rootPane, "xin vui lòng chọn dòng cần sửa");
+		BanGiay lop = new BanGiay();
+		lop.setLoai(textField.getText());
+		lop.setMa(textField_1.getText());
+		lop.setMau(textField_2.getText());
+		lop.setSize(textField_3.getText());
+		lop.setSoluong(textField_4.getText());
+		lop.setGia(textField_5.getText());
+	
+		BanGiayDAO.update(lop);
+		//textField.setEditable(false);
+
+//		Object [] row = {lop.getLoai(),lop.getMa(),lop.getMau(),lop.getSize(),lop.getSoluong(),lop.getGia()};
+//		model.addRow(row);
+//		
+	}
+	
+	void init()
+	{
+		ArrayList<BanGiay> list = BanGiayDAO.getBanGiayAll();
+		for(int i=0; i< list.size();i++)
+		{
+			BanGiay lop = list.get(i);
+			Object[] row = {lop.getLoai(),lop.getMa(),lop.getMau(),lop.getSize(),lop.getSoluong(),lop.getGia()};
+			model.addRow(row);
+		}
+	}
+	
 }
+	
+
+
